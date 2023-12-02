@@ -4,7 +4,7 @@ using UnityEngine;
 
 static public class NetworkServerProcessing
 {
-
+    public const int ballonIdSign = 1;
     #region Send and Receive Data Functions
     static public void ReceivedMessageFromClient(string msg, int clientConnectionID, TransportPipeline pipeline)
     {
@@ -13,10 +13,13 @@ static public class NetworkServerProcessing
         string[] csv = msg.Split(',');
         int signifier = int.Parse(csv[0]);
 
-        if (signifier == ClientToServerSignifiers.asd)
+        if (signifier == ClientToServerSignifiers.deleteBalloonCommand)
         {
 
+            gameLogic.RemoveBalloon(int.Parse(csv[ballonIdSign]));
         }
+        else if( signifier == ClientToServerSignifiers.playerQuit)
+        { DisconnectionEvent(clientConnectionID); }
         // else if (signifier == ClientToServerSignifiers.asd)
         // {
 
@@ -36,10 +39,12 @@ static public class NetworkServerProcessing
     static public void ConnectionEvent(int clientConnectionID)
     {
         Debug.Log("Client connection, ID == " + clientConnectionID);
+        gameLogic.AddPlayer(clientConnectionID);
     }
     static public void DisconnectionEvent(int clientConnectionID)
     {
         Debug.Log("Client disconnection, ID == " + clientConnectionID);
+        gameLogic.RemovePlayer(clientConnectionID);
     }
 
     #endregion
@@ -67,12 +72,15 @@ static public class NetworkServerProcessing
 #region Protocol Signifiers
 static public class ClientToServerSignifiers
 {
-    public const int asd = 1;
+    public const int playerQuit = 0;
+    public const int deleteBalloonCommand = 4;
 }
 
 static public class ServerToClientSignifiers
 {
-    public const int asd = 1;
+    public const int addNewBalloonCommand = 2;
+    public const int updateBalloonCommand = 3;
+    public const int removeBalloonCommand = 4;
 }
 
 #endregion
