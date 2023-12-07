@@ -20,6 +20,10 @@ static public class NetworkServerProcessing
         }
         else if( signifier == ClientToServerSignifiers.playerQuit)
         { DisconnectionEvent(clientConnectionID); }
+        else if ( signifier == ClientToServerSignifiers.updateHeartbeat )
+        {
+            networkServer.UpdateHeartbeatTime(clientConnectionID);
+        }
         // else if (signifier == ClientToServerSignifiers.asd)
         // {
 
@@ -39,6 +43,7 @@ static public class NetworkServerProcessing
     static public void ConnectionEvent(int clientConnectionID)
     {
         Debug.Log("Client connection, ID == " + clientConnectionID);
+        networkServer.AddPlayerToLastHeartbeat(clientConnectionID);
         gameLogic.AddPlayer(clientConnectionID);
     }
     static public void DisconnectionEvent(int clientConnectionID)
@@ -74,6 +79,7 @@ static public class ClientToServerSignifiers
 {
     public const int playerQuit = 0;
     public const int deleteBalloonCommand = 4;
+    public const int updateHeartbeat = 5;
 }
 
 static public class ServerToClientSignifiers
