@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 public class GameLogic : MonoBehaviour
@@ -62,12 +63,15 @@ public class GameLogic : MonoBehaviour
         players.Add(playerID);
         if (balloons.Count > 0)
         {
+            StringBuilder balloonData = new StringBuilder();
             foreach (Balloon balloon in balloons.Values)
             {
-                SendBalloonToClients (balloon.id, balloon.screenPositionXPercent, balloon.screenPositionYPercent);
+                balloonData.Append($"{balloon.id},{balloon.screenPositionXPercent},{balloon.screenPositionYPercent};");
             }
+            NetworkServerProcessing.SendMessageToClient($"{ServerToClientSignifiers.AddBalloonBatchCommand},{balloonData}", playerID, TransportPipeline.ReliableAndInOrder);
         }
     }
+
 
     public void RemovePlayer(int playerID)
     {

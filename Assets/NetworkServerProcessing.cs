@@ -87,6 +87,7 @@ static public class ServerToClientSignifiers
     public const int addNewBalloonCommand = 2;
     public const int updateBalloonCommand = 3;
     public const int removeBalloonCommand = 4;
+    public const int AddBalloonBatchCommand = 6;
 }
 
 #endregion
