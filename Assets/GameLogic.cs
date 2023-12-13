@@ -54,7 +54,7 @@ public class GameLogic : MonoBehaviour
         string msg = $"{ServerToClientSignifiers.addNewBalloonCommand},{balloonID},{positionX},{positionY}";
         foreach (int id in players)
         {
-            NetworkServerProcessing.SendMessageToClient(msg, id, TransportPipeline.FireAndForget);
+            NetworkServerProcessing.SendMessageToClient(msg, id, TransportPipeline.ReliableAndInOrder);
         }
     }
 
@@ -85,7 +85,7 @@ public class GameLogic : MonoBehaviour
             string msg = $"{ServerToClientSignifiers.removeBalloonCommand},{id}";
             foreach (int playerID in players)
             {
-                NetworkServerProcessing.SendMessageToClient(msg, playerID, TransportPipeline.FireAndForget);
+                NetworkServerProcessing.SendMessageToClient(msg, playerID, TransportPipeline.ReliableAndInOrder);
             }
             balloons.Remove(id);
         }
